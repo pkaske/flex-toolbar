@@ -1,0 +1,33 @@
+{
+  "name": "flex-toolbar",
+  "version": "1.0.0",
+  "authors": [
+    "Peter Kaske <p.kaske@gmail.com>"
+  ],
+  "description": "Flexible toolbar grid to organize application controls in tabs and columns. Build with polymer.",
+  "license": "MIT",
+  "keywords": [
+    "polymer",
+    "web-components",
+    "web-component",
+    "toolbar",
+    "flexible"
+  ],
+  "main": "flex-toolbar.html",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior#^1.0.0",
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.4",
+    "icon-popup": "^0.1.0",
+    "fa-awesome": "^1.0.0"
+  }
+}

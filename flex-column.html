@@ -1,0 +1,238 @@
+<!--
+@license
+Copyright (c) 2015 Peter Kaske <p.kaske@gmail.com>. All rights reserved.
+This code may only be used under the MIT license found at http://opensource.org/licenses/MIT.
+Or see the LICENSE file that comes with this code.
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+
+<!--
+Flexible column element to use inside `flex-toolbar` or `flex-tab`.
+
+@group GUI Elements
+@element flex-column
+@demo demo/index.html
+@homepage https://pkaske.github.io/flex-column
+-->
+
+<dom-module id="flex-column">
+  <style>
+    :host {
+      display: block;
+      padding: 5px;
+      background-color: #c1d1c1;
+
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      @apply(--flex-column-theme);
+    }
+
+    :host .hidden {
+      display: none;
+    }
+
+    :host ::content > label {
+      display: block;
+      color: #e0e0e0;
+      font-size: 0.8em;
+
+      @apply(--flex-column-label-theme);
+    }
+
+    .content-wrap {
+      @apply(--layout-horizontal);
+    }
+
+    .content-wrap #scrollerLeft,
+    .content-wrap #scrollerRight {
+      min-width: 30px;
+      @apply(--layout-horizontal);
+      @apply(--layout-center-center);
+    }
+
+    .content-wrap ::content > .content {
+      @apply(--layout-horizontal);
+      overflow: hidden;
+    }
+
+    .content-wrap ::content > .content.wrap {
+      @apply(--layout-wrap);
+      overflow: visible;
+    }
+  </style>
+  <template>
+    <content select="label"></content>
+    <div class="content-wrap" on-track="_onTrack">
+      <div id="scrollerLeft" on-down="_onScrollLeftDown" on-up="_onScrollUp">
+        <content select="[scroll-left]"></content>
+      </div>
+      <content id="content" select="div.content"></content>
+      <div id="scrollerRight" on-down="_onScrollRightDown" on-up="_onScrollUp">
+        <content select="[scroll-right]"></content>
+      </div>
+    </div>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: "flex-column",
+
+    properties: {
+      flex: {
+        type: Number,
+        value: 0,
+        observer: '_flexChanged'
+      },
+
+      wrap: {
+        type: Boolean,
+        value: false,
+        observer: '_wrapChanged'
+      },
+
+      _holdingTimer: {
+        type: Object,
+        value: null
+      },
+
+      _content: {
+        type: Object,
+        value: null
+      },
+
+      _scrollLeft: {
+        type: Number,
+        value: 0
+      }
+    },
+
+    behaviors: [
+      Polymer.IronResizableBehavior
+    ],
+
+    listeners: {
+      'iron-resize': '_onResize'
+    },
+
+    get content() {
+      if (!this._content) {
+        this._content = Polymer.dom(this.$.content).getDistributedNodes()[0];
+      }
+
+      return this._content;
+    },
+
+    get scrollMaxRange() {
+      return Math.max(0, this.content.scrollWidth - this.content.offsetWidth);
+    },
+
+    _flexChanged: function(newFlex, oldFlex) {
+      if (oldFlex) {
+        this.classList.remove('flex-' + oldFlex);
+      }
+
+      if (newFlex && newFlex > 0) {
+        this.classList.add('flex-' + newFlex);
+      }
+    },
+
+    _wrapChanged: function(value) {
+      this.content.classList.toggle('wrap', value);
+      this._updateScrollBtns();
+    },
+
+    _onScrollLeftDown: function(e) {
+      if (this._holdingTimer) return;
+      this._holdingTimer = setInterval(this._scrollToLeft.bind(this), 1);
+    },
+
+    _onScrollRightDown: function(e) {
+      if (this._holdingTimer) return;
+      this._holdingTimer = setInterval(this._scrollToRight.bind(this), 1);
+    },
+
+    _onScrollUp: function() {
+      clearInterval(this._holdingTimer);
+      this._holdingTimer = null;
+    },
+
+    _scrollToLeft: function() {
+      this._scrollLeft -= 3;
+      this._scrollLeft = Math.max(0, this._scrollLeft);
+
+      if (this._scrollLeft == 0) {
+        this._onScrollUp();
+      }
+
+      this.content.scrollLeft = this._scrollLeft;
+      this._updateScrollBtns();
+    },
+
+    _scrollToRight: function() {
+      this._scrollLeft += 3;
+      this._scrollLeft = Math.min(this.scrollMaxRange, this._scrollLeft);
+
+      if (this._scrollLeft == this.scrollMaxRange) {
+        this._onScrollUp();
+      }
+
+      this.content.scrollLeft = this._scrollLeft;
+      this._updateScrollBtns();
+    },
+
+    _onTrack: function(e) {
+      if (!e.detail.ddx) return;
+
+      this._scrollLeft = Math.min(Math.max(0, this._scrollLeft - e.detail.ddx), this.scrollMaxRange);
+      this.content.scrollLeft = this._scrollLeft;
+      this._updateScrollBtns();
+    },
+
+    _updateScrollBtns: function() {
+      var scrollLeft = this.content.scrollLeft;
+      var hiddenCount = 0;
+
+      if (scrollLeft == 0) {
+        this.$.scrollerLeft.style.visibility = 'hidden';
+        hiddenCount++;
+      } else {
+        this.$.scrollerLeft.style.visibility = 'visible';
+      }
+
+      if (scrollLeft == this.scrollMaxRange) {
+        this.$.scrollerRight.style.visibility = 'hidden';
+        hiddenCount++;
+      } else {
+        this.$.scrollerRight.style.visibility = 'visible';
+      }
+
+      if (hiddenCount == 2 || this.wrap) {
+        this.$.scrollerLeft.style.display = 'none';
+        this.$.scrollerRight.style.display = 'none';
+      } else {
+        this.$.scrollerLeft.style.display = '';
+        this.$.scrollerRight.style.display = '';
+      }
+    },
+
+    _computeScrollClass: function(isWrapping) {
+      if (isWrapping) {
+        return 'hidden';
+      }
+
+      return '';
+    },
+
+    _onResize: function() {
+      this.debounce('_onResize', function() {
+        this._updateScrollBtns();
+      }, 10);
+    }
+  });
+</script>

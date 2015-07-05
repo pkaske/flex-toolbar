@@ -1,0 +1,67 @@
+<!--
+@license
+Copyright (c) 2015 Peter Kaske <p.kaske@gmail.com>. All rights reserved.
+This code may only be used under the MIT license found at http://opensource.org/licenses/MIT.
+Or see the LICENSE file that comes with this code.
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
+
+<!--
+Flexible toolbar grid to organize application controls in tabs and columns.
+
+@group GUI Elements
+@element flex-toolbar
+@demo demo/index.html
+@homepage https://pkaske.github.io/flex-toolbar
+-->
+
+<dom-module id="flex-toolbar">
+  <style>
+    :host {
+      display: block;
+      background-color: #f4f4f4;
+
+      @apply(--flex-toolbar-theme);
+    }
+
+    .main-wrap {
+      @apply(--layout-horizontal);
+    }
+
+    .main-wrap[vertical] {
+      @apply(--layout-vertical);
+    }
+
+    :host ::content flex-delemiter {
+      width: 1px;
+      background-color: #fff;
+
+      @apply(--flex-delemiter-theme);
+    }
+  </style>
+  <template>
+    <div class="main-wrap" vertical$="{{verticalLayout}}">
+      <content select="flex-column,flex-delemiter"></content>
+    </div>
+    <iron-media-query query="{{breakVertical}}" query-matches="{{verticalLayout}}"></iron-media-query>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: "flex-toolbar",
+
+    properties: {
+      breakVertical: {
+        type: String,
+        value: '(max-width: 600px)'
+      },
+
+      verticalLayout: {
+        type: Boolean,
+        value: false
+      }
+    }
+  });
+</script>
