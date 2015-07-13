@@ -22,12 +22,14 @@ Flexible toolbar grid to organize application controls in tabs and columns.
     :host {
       display: block;
       background-color: #f4f4f4;
+      @apply(--layout-horizontal);
 
       @apply(--flex-toolbar-theme);
     }
 
     .main-wrap {
       @apply(--layout-horizontal);
+      @apply(--layout-flex);
     }
 
     .main-wrap[vertical] {

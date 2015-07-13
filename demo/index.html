@@ -64,30 +64,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <body>
 
 <flex-toolbar>
-  <flex-column class="buttons" flex="1">
-    <label>Formatting</label>
-    <fa-awesome icon="angle-left" size="2" scroll-left></fa-awesome>
+  <flex-column vertical flex="2">
     <div class="content">
-      <paper-button><fa-awesome icon="bold"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="italic"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="underline"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="list"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="indent"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="outdent"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="clipboard"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="paste"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="font"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="link"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="list-ol"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="list-ul"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="paperclip"></fa-awesome></paper-button>
-      <paper-button><fa-awesome icon="strikethrough"></fa-awesome></paper-button>
+      <flex-column class="buttons">
+        <fa-awesome icon="angle-left" size="2" scroll-left></fa-awesome>
+        <div class="content">
+          <paper-button><fa-awesome icon="bold"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="italic"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="underline"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="list"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="indent"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="outdent"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="clipboard"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="paste"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="font"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="link"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="list-ol"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="list-ul"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="paperclip"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="strikethrough"></fa-awesome></paper-button>
+        </div>
+        <fa-awesome icon="angle-right" size="2" scroll-right></fa-awesome>
+      </flex-column>
+      <flex-column class="buttons">
+        <fa-awesome icon="angle-left" size="2" scroll-left></fa-awesome>
+        <div class="content">
+          <paper-button><fa-awesome icon="bold"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="italic"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="underline"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="list"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="indent"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="outdent"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="clipboard"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="paste"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="font"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="link"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="list-ol"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="list-ul"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="paperclip"></fa-awesome></paper-button>
+          <paper-button><fa-awesome icon="strikethrough"></fa-awesome></paper-button>
+        </div>
+        <fa-awesome icon="angle-right" size="2" scroll-right></fa-awesome>
+      </flex-column>
     </div>
-    <fa-awesome icon="angle-right" size="2" scroll-right></fa-awesome>
   </flex-column>
   <flex-delemiter></flex-delemiter>
   <flex-column flex="2" wrap>
-    <label>Text Tools</label>
     <div class="content">
       <icon-popup>
         <fa-awesome icon="align-center">align</fa-awesome>
@@ -104,8 +126,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <flex-column class="some-text" flex="3">
     <label>Some Text</label>
     <div class="content">
-      <span>Test</span>
-      <span>My Stuff</span>
+      <flex-column vertical>
+        <div class="content">
+          <div>line 1</div>
+          <div>line 2</div>
+        </div>
+      </flex-column>
+      <flex-column>
+        <div class="content">
+          <span>line 3</span>
+          <span>line 4</span>
+        </div>
+      </flex-column>
     </div>
   </flex-column>
 </flex-toolbar>

@@ -21,8 +21,7 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
 <dom-module id="flex-column">
   <style>
     :host {
-      display: block;
-      padding: 5px;
+      @apply(--layout-vertical);
       background-color: #c1d1c1;
 
       -webkit-user-select: none;
@@ -35,14 +34,6 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
 
     :host .hidden {
       display: none;
-    }
-
-    :host ::content > label {
-      display: block;
-      color: #e0e0e0;
-      font-size: 0.8em;
-
-      @apply(--flex-column-label-theme);
     }
 
     .content-wrap {
@@ -61,20 +52,33 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
       overflow: hidden;
     }
 
+    :host[vertical] > .content-wrap ::content > .content {
+      @apply(--layout-vertical);
+    }
+
+    :host[center] {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+
+    :host[bottom] {
+      @apply(--layout-horizontal);
+      @apply(--layout-end);
+    }
+
     .content-wrap ::content > .content.wrap {
       @apply(--layout-wrap);
       overflow: visible;
     }
   </style>
   <template>
-    <content select="label"></content>
     <div class="content-wrap" on-track="_onTrack">
       <div id="scrollerLeft" on-down="_onScrollLeftDown" on-up="_onScrollUp">
         <content select="[scroll-left]"></content>
       </div>
       <content id="content" select="div.content"></content>
       <div id="scrollerRight" on-down="_onScrollRightDown" on-up="_onScrollUp">
-        <content select="[scroll-right]"></content>
+          <content select="[scroll-right]"></content>
       </div>
     </div>
   </template>
@@ -205,7 +209,7 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
         this.$.scrollerLeft.style.visibility = 'visible';
       }
 
-      if (scrollLeft == this.scrollMaxRange) {
+      if (scrollLeft == this.scrollMaxRange || this.scrollMaxRange < 1) {
         this.$.scrollerRight.style.visibility = 'hidden';
         hiddenCount++;
       } else {
@@ -232,7 +236,7 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
     _onResize: function() {
       this.debounce('_onResize', function() {
         this._updateScrollBtns();
-      }, 10);
+      }, 50);
     }
   });
 </script>
