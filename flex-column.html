@@ -47,12 +47,17 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
       @apply(--layout-center-center);
     }
 
-    .content-wrap ::content > .content {
+    .content-wrap #content {
       @apply(--layout-horizontal);
       overflow: hidden;
     }
 
-    :host[vertical] > .content-wrap ::content > .content {
+    .content-wrap > #content[wrap] {
+      @apply(--layout-wrap);
+      overflow: visible;
+    }
+
+    :host[vertical] > .content-wrap > #content {
       @apply(--layout-vertical);
     }
 
@@ -65,18 +70,15 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
       @apply(--layout-horizontal);
       @apply(--layout-end);
     }
-
-    .content-wrap ::content > .content.wrap {
-      @apply(--layout-wrap);
-      overflow: visible;
-    }
   </style>
   <template>
     <div class="content-wrap" on-track="_onTrack">
       <div id="scrollerLeft" on-down="_onScrollLeftDown" on-up="_onScrollUp">
         <content select="[scroll-left]"></content>
       </div>
-      <content id="content" select="div.content"></content>
+      <div id="content" wrap$="[[wrap]]">
+        <content select="*:not([scroll-right])"></content>
+      </div>
       <div id="scrollerRight" on-down="_onScrollRightDown" on-up="_onScrollUp">
           <content select="[scroll-right]"></content>
       </div>
@@ -105,11 +107,6 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
         value: null
       },
 
-      _content: {
-        type: Object,
-        value: null
-      },
-
       _scrollLeft: {
         type: Number,
         value: 0
@@ -124,16 +121,8 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
       'iron-resize': '_onResize'
     },
 
-    get content() {
-      if (!this._content) {
-        this._content = Polymer.dom(this.$.content).getDistributedNodes()[0];
-      }
-
-      return this._content;
-    },
-
     get scrollMaxRange() {
-      return Math.max(0, this.content.scrollWidth - this.content.offsetWidth);
+      return Math.max(0, this.$.content.scrollWidth - this.$.content.offsetWidth);
     },
 
     _flexChanged: function(newFlex, oldFlex) {
@@ -147,7 +136,6 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
     },
 
     _wrapChanged: function(value) {
-      this.content.classList.toggle('wrap', value);
       this._updateScrollBtns();
     },
 
@@ -174,7 +162,7 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
         this._onScrollUp();
       }
 
-      this.content.scrollLeft = this._scrollLeft;
+      this.$.content.scrollLeft = this._scrollLeft;
       this._updateScrollBtns();
     },
 
@@ -186,7 +174,7 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
         this._onScrollUp();
       }
 
-      this.content.scrollLeft = this._scrollLeft;
+      this.$.content.scrollLeft = this._scrollLeft;
       this._updateScrollBtns();
     },
 
@@ -194,12 +182,12 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
       if (!e.detail.ddx) return;
 
       this._scrollLeft = Math.min(Math.max(0, this._scrollLeft - e.detail.ddx), this.scrollMaxRange);
-      this.content.scrollLeft = this._scrollLeft;
+      this.$.content.scrollLeft = this._scrollLeft;
       this._updateScrollBtns();
     },
 
     _updateScrollBtns: function() {
-      var scrollLeft = this.content.scrollLeft;
+      var scrollLeft = this.$.content.scrollLeft;
       var hiddenCount = 0;
 
       if (scrollLeft == 0) {
