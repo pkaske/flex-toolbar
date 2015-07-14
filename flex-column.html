@@ -47,9 +47,11 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
       @apply(--layout-center-center);
     }
 
-    .content-wrap #content {
+    .content-wrap > #content {
       @apply(--layout-horizontal);
       overflow: hidden;
+
+      @apply(--flex-column-content);
     }
 
     .content-wrap > #content[wrap] {
