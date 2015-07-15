@@ -32,7 +32,8 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
       @apply(--flex-column);
     }
 
-    :host .hidden {
+    :host .hidden,
+    :host [hidden] {
       display: none;
     }
 
@@ -75,13 +76,13 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
   </style>
   <template>
     <div class="content-wrap" on-track="_onTrack">
-      <div id="scrollerLeft" on-down="_onScrollLeftDown" on-up="_onScrollUp">
+      <div id="scrollerLeft" hidden$="[[noScrolling]]" on-down="_onScrollLeftDown" on-up="_onScrollUp">
         <content select="[scroll-left]"></content>
       </div>
       <div id="content" wrap$="[[wrap]]">
         <content select="*:not([scroll-right])"></content>
       </div>
-      <div id="scrollerRight" on-down="_onScrollRightDown" on-up="_onScrollUp">
+      <div id="scrollerRight" hidden$="[[noScrolling]]" on-down="_onScrollRightDown" on-up="_onScrollUp">
           <content select="[scroll-right]"></content>
       </div>
     </div>
@@ -102,6 +103,11 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
         type: Boolean,
         value: false,
         observer: '_wrapChanged'
+      },
+
+      noScrolling: {
+        type: Boolean,
+        value: false
       },
 
       _holdingTimer: {
@@ -142,12 +148,12 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
     },
 
     _onScrollLeftDown: function(e) {
-      if (this._holdingTimer) return;
+      if (this._holdingTimer || this.noScrolling) return;
       this._holdingTimer = setInterval(this._scrollToLeft.bind(this), 1);
     },
 
     _onScrollRightDown: function(e) {
-      if (this._holdingTimer) return;
+      if (this._holdingTimer || this.noScrolling) return;
       this._holdingTimer = setInterval(this._scrollToRight.bind(this), 1);
     },
 
@@ -181,7 +187,7 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
     },
 
     _onTrack: function(e) {
-      if (!e.detail.ddx) return;
+      if (!e.detail.ddx || this.noScrolling) return;
 
       this._scrollLeft = Math.min(Math.max(0, this._scrollLeft - e.detail.ddx), this.scrollMaxRange);
       this.$.content.scrollLeft = this._scrollLeft;
@@ -189,6 +195,8 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
     },
 
     _updateScrollBtns: function() {
+      if (this.noScrolling) return;
+
       var scrollLeft = this.$.content.scrollLeft;
       var hiddenCount = 0;
 
@@ -213,14 +221,6 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
         this.$.scrollerLeft.style.display = '';
         this.$.scrollerRight.style.display = '';
       }
-    },
-
-    _computeScrollClass: function(isWrapping) {
-      if (isWrapping) {
-        return 'hidden';
-      }
-
-      return '';
     },
 
     _onResize: function() {
