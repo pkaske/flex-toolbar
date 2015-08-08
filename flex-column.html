@@ -60,16 +60,16 @@ Flexible column element to use inside `flex-toolbar` or `flex-tab`.
       overflow: visible;
     }
 
-    :host[vertical] > .content-wrap > #content {
+    :host([vertical]) > .content-wrap > #content  {
       @apply(--layout-vertical);
     }
 
-    :host[center] {
+    :host([center]) {
       @apply(--layout-horizontal);
       @apply(--layout-center);
     }
 
-    :host[bottom] {
+    :host([bottom]) {
       @apply(--layout-horizontal);
       @apply(--layout-end);
     }
